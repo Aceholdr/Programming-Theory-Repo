@@ -1,12 +1,16 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PlayableCharakter : Character
 {
-    [SerializeField] Button[] actionButton;
-    [SerializeField] Button[] friendButton;
-    [SerializeField] Button[] enemyButton;
+    private Button[] actionButton;
+    private Button[] friendButton;
+    private Button[] enemyButton;
+
+    private BattleField battleField;
 
     // Start is called before the first frame update
     void Start()
@@ -20,52 +24,60 @@ public class PlayableCharakter : Character
 
     }
 
+    // Assigns every button
     private void Awake()
     {
-        foreach (Button b in actionButton)
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
         {
+            Button b = g.GetComponent<Button>();
             b.onClick.AddListener(delegate { SelectAction(b); });
         }
 
-        foreach (Button b in actionButton)
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
         {
+            Button b = g.GetComponent<Button>();
             b.onClick.AddListener(delegate { SelectFriend(b); });
-            b.gameObject.SetActive(false);
+
+            MoveGameObjectOut(g);
+        }
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Button b = g.GetComponent<Button>();
+            b.onClick.AddListener(delegate { SelectEnemy(b); });
+
+            MoveGameObjectOut(g);
         }
 
-        foreach (Button b in enemyButton)
-        {
-            b.onClick.AddListener(delegate { SelectEnemy(b); });
-            b.gameObject.SetActive(false);
-        }
+        battleField = GameObject.FindWithTag("BattleField").GetComponent<BattleField>();
     }
 
+    // Selects the action the player takes
     private void SelectAction(Button action)
     {
         string actionStr = action.GetComponentInChildren<TextMeshProUGUI>().text;
 
         if (actionStr == "Heal")
         {
-            foreach (Button b in actionButton)
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
             {
-                b.gameObject.SetActive(false);
+                MoveGameObjectOut(g);
             }
 
-            foreach (Button b in friendButton)
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
             {
-                b.gameObject.SetActive(true);
+                MoveGameObjectIn(g);
             }
         }
         else if (actionStr == "Attack")
         {
-            foreach (Button b in actionButton)
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
             {
-                b.gameObject.SetActive(false);
+                MoveGameObjectOut(g);
             }
 
-            foreach (Button b in enemyButton)
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
             {
-                b.gameObject.SetActive(true);
+                MoveGameObjectIn(g);
             }
         }
         else if (actionStr == "Block")
@@ -74,46 +86,86 @@ public class PlayableCharakter : Character
         }
     }
 
+    // Heals the chosen friend
     private void SelectFriend(Button friendBttn)
     {
-        string actionStr = friendBttn.GetComponentInChildren<TextMeshProUGUI>().text;
+        string friendStr = friendBttn.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        switch (actionStr)
+        switch (friendStr)
         {
             case "Healer":
-                // code
+                Heal(healing, battleField.Charakters[0]);
                 break;
             case "DPS Left":
-                // code
+                Heal(healing, battleField.Charakters[1]);
                 break;
             case "DPS Right":
-                // code
+                Heal(healing, battleField.Charakters[2]);
                 break;
             case "Tank":
-                // code
+                Heal(healing, battleField.Charakters[3]);
                 break;
             default:
-                foreach (Button b in actionButton)
+                foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
                 {
-                    b.gameObject.SetActive(true);
+                    MoveGameObjectIn(g);
                 }
 
-                foreach (Button b in actionButton)
+                foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
                 {
-                    b.gameObject.SetActive(false);
+                    MoveGameObjectOut(g);
                 }
                 break;
-
         }
     }
 
+    // Inflicts damage to the chosen enemy
     private void SelectEnemy(Button enemyBttn)
     {
-        // Add Enemy Buttons...
+        string enemyStr = enemyBttn.GetComponentInChildren<TextMeshProUGUI>().text;
+
+        switch (enemyStr)
+        {
+            case "Left":
+                Attack(damage, battleField.Enemies[0]);
+                break;
+            case "Middle L":
+                Attack(damage, battleField.Enemies[1]);
+                break;
+            case "Middle R":
+                Attack(damage, battleField.Enemies[2]);
+                break;
+            case "Right":
+                Attack(damage, battleField.Enemies[3]);
+                break;
+            default:
+                foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
+                {
+                    MoveGameObjectIn(g);
+                }
+
+                foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
+                {
+                    MoveGameObjectOut(g);
+                }
+                break;
+        }
     }
 
-    protected void MakeTurn()
+    protected override void MakeTurn()
     {
 
+    }
+
+    // Moves the UI Buttons into the screen
+    private void MoveGameObjectIn(GameObject g)
+    {
+        g.transform.position += new Vector3(transform.position.x + 220, transform.position.y - 1, transform.position.z);
+    }
+
+    // Moves the UI Buttons out of the screen
+    private void MoveGameObjectOut(GameObject g)
+    {
+        g.transform.position += new Vector3(transform.position.x - 200, transform.position.y, transform.position.z);
     }
 }
