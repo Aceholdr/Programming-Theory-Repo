@@ -17,6 +17,12 @@ public class DPS : PlayableCharakter
     // Update is called once per frame
     void Update()
     {
-        
+        healthDisplay.text = health + "/250";
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void OnBeforeSceneLoadRuntimeMethod()
+    {
+        Debug.Log("Before first Scene loaded");
     }
 }

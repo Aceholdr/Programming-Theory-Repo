@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7107704290341156829}
   - component: {fileID: 7107704290341156828}
   - component: {fileID: 7107704290341156835}
-  - component: {fileID: 3908743223599862384}
+  - component: {fileID: 2910983647997665269}
   m_Layer: 0
   m_Name: BossEnemy
   m_TagString: Untagged
@@ -96,7 +96,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3908743223599862384
+--- !u!114 &2910983647997665269
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,4 +108,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43aad5df460fa0f4a8f8ec253b62b6a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleScreenBG: {fileID: 0}
+  infoText: {fileID: 0}

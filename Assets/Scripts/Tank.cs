@@ -17,6 +17,6 @@ public class Tank : PlayableCharakter
     // Update is called once per frame
     void Update()
     {
-        
+        healthDisplay.text = health + "/400";
     }
 }

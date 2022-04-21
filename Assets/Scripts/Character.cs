@@ -7,11 +7,15 @@ using TMPro;
 
 public abstract class Character : MonoBehaviour, IComparable<Character>
 {
+    [SerializeField] protected TextMeshProUGUI infoText;
+
     protected float speed;
     protected float health;
     protected float damage;
     protected float healing;
     protected bool isBlocking;
+
+    protected BattleField battleField;
 
     public float Speed { get { return speed; } }
     public float Health { get { return health; } }
@@ -21,35 +25,31 @@ public abstract class Character : MonoBehaviour, IComparable<Character>
 
     protected GameObject battleScreenBG;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        battleField = GameObject.FindWithTag("BattleField").GetComponent<BattleField>();
     }
 
     protected void Attack(float damage, Character attackedChar)
     {
-        Debug.Log("Angiff");
+        infoText.text = this.name + " attacked " + attackedChar.name + " and did " + damage + " damage!";
         attackedChar.health -= damage;
+        Debug.Log(this.name);
     }
 
     protected void Heal(float healing, Character healedChar)
     {
+        infoText.text = this.name + " healed " + healedChar.name + " healing " + healing + " life points!";
         healedChar.health += healing;
     }
 
     protected void Block()
     {
+        infoText.text = this.name + " is blocking!";
         isBlocking = true;
     }
 
-    protected abstract void MakeTurn();
+    public abstract void MakeTurn(Character activeChar);
 
     public int CompareTo(Character character)
     {

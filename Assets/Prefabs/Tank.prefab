@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8843325057654295190}
   - component: {fileID: 8843325057654295191}
   - component: {fileID: 8843325057654295188}
-  - component: {fileID: 4441834492349152124}
+  - component: {fileID: -4673916368954845736}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4441834492349152124
+--- !u!114 &-4673916368954845736
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,5 +108,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94d75c15320ccff4f9d2450be1b7835c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleScreenBG: {fileID: 0}
-  battleField: {fileID: 0}
+  infoText: {fileID: 0}
+  healthDisplay: {fileID: 0}
