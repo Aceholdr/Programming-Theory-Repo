@@ -54,16 +54,16 @@ public class Enemy : Character
                 switch (randomTarget)
                 {
                     case 0:
-                        Attack(damage, battleField.Friends[0]);
+                        Attack(damage, BattleField.Friends[0]);
                         break;
                     case 1:
-                        Attack(damage, battleField.Friends[1]);
+                        Attack(damage, BattleField.Friends[1]);
                         break;
                     case 2:
-                        Attack(damage, battleField.Friends[2]);
+                        Attack(damage, BattleField.Friends[2]);
                         break;
                     case 3:
-                        Attack(damage, battleField.Friends[3]);
+                        Attack(damage, BattleField.Friends[3]);
                         break;
                 }
             }
@@ -72,16 +72,16 @@ public class Enemy : Character
                 switch (randomTarget)
                 {
                     case 0:
-                        Heal(healing, battleField.Enemies[0]);
+                        Heal(healing, BattleField.Enemies[0]);
                         break;
                     case 1:
-                        Heal(healing, battleField.Enemies[1]);
+                        Heal(healing, BattleField.Enemies[1]);
                         break;
                     case 2:
-                        Heal(healing, battleField.Enemies[2]);
+                        Heal(healing, BattleField.Enemies[2]);
                         break;
                     case 3:
-                        Heal(healing, battleField.Enemies[3]);
+                        Heal(healing, BattleField.Enemies[3]);
                         break;
                 }
             }

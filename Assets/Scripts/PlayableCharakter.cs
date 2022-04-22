@@ -54,8 +54,6 @@ public class PlayableCharakter : Character
 
             MoveGameObjectOut(g);
         }
-
-        
     }
 
     // Selects the action the player takes
@@ -105,19 +103,19 @@ public class PlayableCharakter : Character
             switch (friendStr)
             {
                 case "Healer":
-                    Heal(healing, battleField.Friends[0]);
+                    Heal(healing, BattleField.Friends[0]);
                     isWaiting = false;
                     break;
                 case "DPS Left":
-                    Heal(healing, battleField.Friends[1]);
+                    Heal(healing, BattleField.Friends[1]);
                     isWaiting = false;
                     break;
                 case "DPS Right":
-                    Heal(healing, battleField.Friends[2]);
+                    Heal(healing, BattleField.Friends[2]);
                     isWaiting = false;
                     break;
                 case "Tank":
-                    Heal(healing, battleField.Friends[3]);
+                    Heal(healing, BattleField.Friends[3]);
                     isWaiting = false;
                     break;
                 default:
@@ -147,19 +145,19 @@ public class PlayableCharakter : Character
             switch (enemyStr)
             {
                 case "Left":
-                    Attack(damage, battleField.Enemies[0]);
+                    Attack(damage, BattleField.Enemies[0]);
                     isWaiting = false;
                     break;
                 case "Middle L":
-                    Attack(damage, battleField.Enemies[1]);
+                    Attack(damage, BattleField.Enemies[1]);
                     isWaiting = false;
                     break;
                 case "Middle R":
-                    Attack(damage, battleField.Enemies[2]);
+                    Attack(damage, BattleField.Enemies[2]);
                     isWaiting = false;
                     break;
                 case "Right":
-                    Attack(damage, battleField.Enemies[3]);
+                    Attack(damage, BattleField.Enemies[3]);
                     isWaiting = false;
                     break;
                 default:

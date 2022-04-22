@@ -6,12 +6,15 @@ using TMPro;
 
 public class BattleField : MonoBehaviour
 {
-    [SerializeField] PlayableCharakter[] friends;
-    [SerializeField] Enemy[] enemies;
+    [SerializeField] GameObject[] friendsImport;
+    [SerializeField] GameObject[] enemiesImport;
+
+    public static GameObject[] friends;
+    public static GameObject[] enemies;
 
     public static bool isTurnDone;
-    public PlayableCharakter[] Friends { get { return friends; } }
-    public Enemy[] Enemies { get { return enemies; } }
+    public static GameObject[] Friends { get { return friends; } }
+    public static GameObject[] Enemies { get { return enemies; } }
 
     private List<Character> turnOrder = new List<Character>();
     private LinkedList<Character> turnOrderLinked = new LinkedList<Character>();
@@ -19,6 +22,15 @@ public class BattleField : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        friends = new GameObject[friendsImport.Length];
+        enemies = new GameObject[enemiesImport.Length];
+
+        for (int i = 0; i < friendsImport.Length; i++)
+        {
+            friends[i] = friendsImport[i];
+            enemies[i] = enemiesImport[i];
+        }
+
         DetermineOrder();
     }
 
@@ -32,6 +44,7 @@ public class BattleField : MonoBehaviour
             if (turnOrderLinked.First.Next != null)
             {
                 turnOrderLinked.RemoveFirst();
+                Debug.Log(turnOrderLinked.First.Next.Value.name);
             }
             else
             {
@@ -47,14 +60,14 @@ public class BattleField : MonoBehaviour
 
     void DetermineOrder()
     {
-        foreach (Character character in friends)
+        foreach (GameObject character in friends)
         {
-            turnOrder.Add(character);
+            turnOrder.Add(character.GetComponent<Character>());
         }
 
-        foreach (Enemy enemy in enemies)
+        foreach (GameObject enemy in enemies)
         {
-            turnOrder.Add(enemy);
+            turnOrder.Add(enemy.GetComponent<Character>());
         }
 
         turnOrder.Sort();

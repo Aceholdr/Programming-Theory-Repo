@@ -27,19 +27,22 @@ public abstract class Character : MonoBehaviour, IComparable<Character>
 
     private void Awake()
     {
-        battleField = GameObject.FindWithTag("BattleField").GetComponent<BattleField>();
+        battleField = GetComponent<BattleField>();
     }
 
-    protected void Attack(float damage, Character attackedChar)
+    protected void Attack(float damage, GameObject attackedGameObj)
     {
-        infoText.text = this.name + " attacked " + attackedChar.name + " and did " + damage + " damage!";
+        Character attackedChar = attackedGameObj.GetComponent<Character>();
+
+        infoText.text = this.name + " attacked " + attackedGameObj.name + " and did " + damage + " damage!";
         attackedChar.health -= damage;
-        Debug.Log(this.name);
     }
 
-    protected void Heal(float healing, Character healedChar)
+    protected void Heal(float healing, GameObject healedGameObj)
     {
-        infoText.text = this.name + " healed " + healedChar.name + " healing " + healing + " life points!";
+        Character healedChar = healedGameObj.GetComponent<Character>();
+
+        infoText.text = this.name + " healed " + healedGameObj.name + " healing " + healing + " life points!";
         healedChar.health += healing;
     }
 

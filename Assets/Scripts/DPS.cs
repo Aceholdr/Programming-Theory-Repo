@@ -19,10 +19,4 @@ public class DPS : PlayableCharakter
     {
         healthDisplay.text = health + "/250";
     }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void OnBeforeSceneLoadRuntimeMethod()
-    {
-        Debug.Log("Before first Scene loaded");
-    }
 }
