@@ -41,10 +41,10 @@ public class BattleField : MonoBehaviour
         {
             Debug.Log("New Turn");
             isTurnDone = false;
+
             if (turnOrderLinked.First.Next != null)
             {
                 turnOrderLinked.RemoveFirst();
-                Debug.Log(turnOrderLinked.First.Next.Value.name);
             }
             else
             {
@@ -60,14 +60,19 @@ public class BattleField : MonoBehaviour
 
     void DetermineOrder()
     {
+        turnOrder.Clear();
+        turnOrderLinked.Clear();
+
         foreach (GameObject character in friends)
         {
             turnOrder.Add(character.GetComponent<Character>());
+            character.GetComponent<PlayableCharakter>().isWaiting = true;
         }
 
         foreach (GameObject enemy in enemies)
         {
             turnOrder.Add(enemy.GetComponent<Character>());
+            enemy.GetComponent<Enemy>().hasAction = true;
         }
 
         turnOrder.Sort();
@@ -79,8 +84,7 @@ public class BattleField : MonoBehaviour
         }
         foreach (Character turn in turnOrderLinked)
         {
-            Debug.Log(turn.Speed);
-
+            Debug.Log(turn.name + " has a speed of: " +turn.Speed);
         }
     }
 }

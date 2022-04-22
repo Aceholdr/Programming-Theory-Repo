@@ -14,7 +14,7 @@ public class PlayableCharakter : Character
 
     [SerializeField] protected TextMeshProUGUI healthDisplay;
 
-    protected bool isWaiting = true;
+    public bool isWaiting = true;
     private string lastAction;
 
 
@@ -54,6 +54,13 @@ public class PlayableCharakter : Character
 
             MoveGameObjectOut(g);
         }
+
+        LoadStats();
+    }
+
+    virtual protected void LoadStats()
+    {
+
     }
 
     // Selects the action the player takes
@@ -147,6 +154,8 @@ public class PlayableCharakter : Character
                 case "Left":
                     Attack(damage, BattleField.Enemies[0]);
                     isWaiting = false;
+                    Debug.Log(this.name + " clicked");
+                    Debug.Log(activeChar + "was active");
                     break;
                 case "Middle L":
                     Attack(damage, BattleField.Enemies[1]);
@@ -182,8 +191,10 @@ public class PlayableCharakter : Character
             yield return new WaitForSeconds(2);
             infoText.text = "vorbei";
             StopAllCoroutines();
+
             BattleField.isTurnDone = true;
             ResetUI();
+            this.activeChar = null;
         }
     }
 

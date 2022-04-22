@@ -19,4 +19,13 @@ public class Tank : PlayableCharakter
     {
         healthDisplay.text = health + "/400";
     }
+
+    protected override void LoadStats()
+    {
+        speed = 3;
+        health = 400;
+        damage = 50;
+        healing = 25;
+        isBlocking = false;
+    }
 }

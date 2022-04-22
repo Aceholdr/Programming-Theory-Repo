@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-    private bool hasAction = true;
+    public bool hasAction = true;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +23,7 @@ public class Enemy : Character
         yield return new WaitForSeconds(2);
         infoText.text = "vorbei";
         StopAllCoroutines();
+
         BattleField.isTurnDone = true;
     }
 
