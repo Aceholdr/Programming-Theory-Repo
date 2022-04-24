@@ -6,33 +6,26 @@ public class Enemy : Character
 {
     public bool hasAction = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    float lowIdleHeight = 0.0f;
+    float highIdleHeight = 1.5f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Waits for 2 seconds, so that the player can read the text
     protected IEnumerator WaitInTurn()
     {
         yield return new WaitForSeconds(2);
-        infoText.text = "vorbei";
         StopAllCoroutines();
 
+        transform.position = new Vector3(transform.position.x, lowIdleHeight, transform.position.z);
         BattleField.isTurnDone = true;
     }
 
+    // Randomly decides an action an a target
     public override void MakeTurn(Character activeChar)
     {
 
-        if (hasAction)
+        if (hasAction && !IsDead)
         {
-            int randomAction = Random.Range(0, 3);
+            int randomAction = Random.Range(0, 4);
             int randomTarget = Random.Range(0, 4);
 
             string actionString = "";
@@ -43,9 +36,12 @@ public class Enemy : Character
                     actionString = "Attack";
                     break;
                 case 1:
-                    actionString = "Heal";
+                    actionString = "Attack";
                     break;
                 case 2:
+                    actionString = "Heal";
+                    break;
+                case 3:
                     Block();
                     break;
             }
@@ -55,16 +51,16 @@ public class Enemy : Character
                 switch (randomTarget)
                 {
                     case 0:
-                        Attack(damage, BattleField.Friends[0]);
+                        Attack(Damage, BattleField.Friends[0]);
                         break;
                     case 1:
-                        Attack(damage, BattleField.Friends[1]);
+                        Attack(Damage, BattleField.Friends[1]);
                         break;
                     case 2:
-                        Attack(damage, BattleField.Friends[2]);
+                        Attack(Damage, BattleField.Friends[2]);
                         break;
                     case 3:
-                        Attack(damage, BattleField.Friends[3]);
+                        Attack(Damage, BattleField.Friends[3]);
                         break;
                 }
             }
@@ -73,16 +69,16 @@ public class Enemy : Character
                 switch (randomTarget)
                 {
                     case 0:
-                        Heal(healing, BattleField.Enemies[0]);
+                        Heal(Healing, BattleField.Enemies[0]);
                         break;
                     case 1:
-                        Heal(healing, BattleField.Enemies[1]);
+                        Heal(Healing, BattleField.Enemies[1]);
                         break;
                     case 2:
-                        Heal(healing, BattleField.Enemies[2]);
+                        Heal(Healing, BattleField.Enemies[2]);
                         break;
                     case 3:
-                        Heal(healing, BattleField.Enemies[3]);
+                        Heal(Healing, BattleField.Enemies[3]);
                         break;
                 }
             }
@@ -91,5 +87,6 @@ public class Enemy : Character
         }
 
         StartCoroutine(WaitInTurn());
+        StartCoroutine(MoveUpAndDown(lowIdleHeight, highIdleHeight));
     }
 }

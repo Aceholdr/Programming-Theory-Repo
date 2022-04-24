@@ -6,33 +6,25 @@ using System.Collections.Generic;
 
 public class PlayableCharakter : Character
 {
-    Character activeChar;
-
-    private Button[] actionButton;
-    private Button[] friendButton;
-    private Button[] enemyButton;
-
     [SerializeField] protected TextMeshProUGUI healthDisplay;
 
-    public bool isWaiting = true;
-    private string lastAction;
+    public bool isWaiting = true;  // If waiting the character can attack
+
+    Character activeChar;  // So that not every character can activate the button at the same time
+    string lastAction;  // Helps moving in and out the UI
+
+    // The height in which the player characters go up and down
+    float lowIdleHeight = 0.5f;
+    float highIdleHeight = 2.0f;
 
 
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        ActivateButtons();
     }
 
     // Assigns every button
-    private void Awake()
+    void ActivateButtons()
     {
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
         {
@@ -45,61 +37,58 @@ public class PlayableCharakter : Character
             Button b = g.GetComponent<Button>();
             b.onClick.AddListener(delegate { SelectFriend(b); });
 
-            MoveGameObjectOut(g);
+            ShrinkButtonDown("Friend");
         }
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             Button b = g.GetComponent<Button>();
             b.onClick.AddListener(delegate { SelectEnemy(b); });
 
-            MoveGameObjectOut(g);
+            ShrinkButtonDown("Enemy");
         }
 
         LoadStats();
     }
 
-    virtual protected void LoadStats()
+    protected virtual void LoadStats()
     {
 
     }
 
     // Selects the action the player takes
-    private void SelectAction(Button action)
+    void SelectAction(Button action)
     {
         string actionStr = action.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        if (actionStr == "Heal")
+        if (!IsDead)
         {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
+            if (actionStr == "Heal")
             {
-                MoveGameObjectOut(g);
+                ShrinkButtonDown("Action");
+                SetButtonToNormalSize("Friend");
             }
-
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
+            else if (actionStr == "Attack")
             {
-                MoveGameObjectIn(g);
+                ShrinkButtonDown("Action");
+                SetButtonToNormalSize("Enemy");
+            }
+            else if (actionStr == "Block")
+            {
+                if (isWaiting && activeChar == this)
+                {
+                    Block();
+                    isWaiting = false;
+                }
             }
         }
-        else if (actionStr == "Attack")
+        else
         {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
-            {
-                MoveGameObjectOut(g);
-            }
-
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
-            {
-                MoveGameObjectIn(g);
-            }
-        }
-        else if (actionStr == "Block")
-        {
-            Block();
+            isWaiting = false;
         }
     }
 
     // Heals the chosen friend
-    private void SelectFriend(Button friendBttn)
+    void SelectFriend(Button friendBttn)
     {
         string friendStr = friendBttn.GetComponentInChildren<TextMeshProUGUI>().text;
 
@@ -110,38 +99,31 @@ public class PlayableCharakter : Character
             switch (friendStr)
             {
                 case "Healer":
-                    Heal(healing, BattleField.Friends[0]);
+                    Heal(Healing, BattleField.Friends[0]);
                     isWaiting = false;
                     break;
                 case "DPS Left":
-                    Heal(healing, BattleField.Friends[1]);
+                    Heal(Healing, BattleField.Friends[1]);
                     isWaiting = false;
                     break;
                 case "DPS Right":
-                    Heal(healing, BattleField.Friends[2]);
+                    Heal(Healing, BattleField.Friends[2]);
                     isWaiting = false;
                     break;
                 case "Tank":
-                    Heal(healing, BattleField.Friends[3]);
+                    Heal(Healing, BattleField.Friends[3]);
                     isWaiting = false;
                     break;
                 default:
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
-                    {
-                        MoveGameObjectIn(g);
-                    }
-
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
-                    {
-                        MoveGameObjectOut(g);
-                    }
+                    SetButtonToNormalSize("Action");
+                    ShrinkButtonDown("Friend");
                     break;
             }
         }
     }
 
     // Inflicts damage to the chosen enemy
-    private void SelectEnemy(Button enemyBttn)
+    void SelectEnemy(Button enemyBttn)
     {
         string enemyStr = enemyBttn.GetComponentInChildren<TextMeshProUGUI>().text;
 
@@ -152,45 +134,37 @@ public class PlayableCharakter : Character
             switch (enemyStr)
             {
                 case "Left":
-                    Attack(damage, BattleField.Enemies[0]);
+                    Attack(Damage, BattleField.Enemies[0]);
                     isWaiting = false;
-                    Debug.Log(this.name + " clicked");
-                    Debug.Log(activeChar + "was active");
                     break;
                 case "Middle L":
-                    Attack(damage, BattleField.Enemies[1]);
+                    Attack(Damage, BattleField.Enemies[1]);
                     isWaiting = false;
                     break;
                 case "Middle R":
-                    Attack(damage, BattleField.Enemies[2]);
+                    Attack(Damage, BattleField.Enemies[2]);
                     isWaiting = false;
                     break;
                 case "Right":
-                    Attack(damage, BattleField.Enemies[3]);
+                    Attack(Damage, BattleField.Enemies[3]);
                     isWaiting = false;
                     break;
                 default:
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
-                    {
-                        MoveGameObjectIn(g);
-                    }
-
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
-                    {
-                        MoveGameObjectOut(g);
-                    }
+                    SetButtonToNormalSize("Action");
+                    ShrinkButtonDown("Enemy");
                     break;
             }
         }
     }
 
+    // After an action was selected, there is a pause of 2 seconds. This lets the player read the text
     protected IEnumerator WaitInTurn()
     {
-        if(isWaiting == false)
+        if (isWaiting == false)
         {
             yield return new WaitForSeconds(2);
-            infoText.text = "vorbei";
             StopAllCoroutines();
+            transform.position = new Vector3(transform.position.x, lowIdleHeight, transform.position.z);
 
             BattleField.isTurnDone = true;
             ResetUI();
@@ -198,44 +172,45 @@ public class PlayableCharakter : Character
         }
     }
 
+    // Activates the button for the current character and lets them go up and down
     public override void MakeTurn(Character activeChar)
     {
         this.activeChar = activeChar;
+
         StartCoroutine(WaitInTurn());
+        StartCoroutine(MoveUpAndDown(lowIdleHeight, highIdleHeight));
     }
 
-    // Moves the UI Buttons into the screen
-    private void MoveGameObjectIn(GameObject g)
+    // Bring the UI back to its normal size
+    void SetButtonToNormalSize(string buttonsToNormalize)
     {
-        g.transform.localScale = new Vector3(1, 1);
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag(buttonsToNormalize))
+        {
+            g.transform.localScale = new Vector3(1, 1);
+        }
     }
 
-    // Moves the UI Buttons out of the screen
-    private void MoveGameObjectOut(GameObject g)
+    // Makes the UI very small
+    void ShrinkButtonDown(string buttonsToShrink)
     {
-        g.transform.localScale = new Vector3(0.005f, 0.005f);
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag(buttonsToShrink))
+        {
+            g.transform.localScale = new Vector3(0.005f, 0.005f);
+        }
     }
 
+    // After a turn ends, the UI is reset
     void ResetUI()
     {
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Action"))
-        {
-            MoveGameObjectIn(g);   
-        }
+        SetButtonToNormalSize("Action");
 
         if (lastAction == "Heal")
         {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Friend"))
-            {
-                MoveGameObjectOut(g);
-            }
+            ShrinkButtonDown("Friend");
         }
         else if (lastAction == "Attack")
         {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Enemy"))
-            {
-                MoveGameObjectOut(g);
-            }
+            ShrinkButtonDown("Enemy");
         }
     }
 }

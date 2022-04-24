@@ -4,24 +4,19 @@ using UnityEngine;
 
 public class Healer : PlayableCharakter
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
-        healthDisplay.text = health + "/100";
+        healthDisplay.text = Health + "/" + MaxHealth;
     }
 
     protected override void LoadStats()
     {
-        speed = 8;
-        health = 100;
-        damage = 25;
-        healing = 75;
-        isBlocking = false;
+        MaxHealth = 100;
+        Speed = 8;
+        Health = 100;
+        Damage = 25;
+        Healing = 75;
+        IsBlocking = false;
     }
 }

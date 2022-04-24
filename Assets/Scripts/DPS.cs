@@ -4,24 +4,19 @@ using UnityEngine;
 
 public class DPS : PlayableCharakter
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
-        healthDisplay.text = health + "/250";
+        healthDisplay.text = Health + "/" + MaxHealth;
     }
 
     protected override void LoadStats()
     {
-        speed = 5;
-        health = 250;
-        damage = 75;
-        healing = 25;
-        isBlocking = false;
+        MaxHealth = 250;
+        Speed = 5;
+        Health = 250;
+        Damage = 75;
+        Healing = 25;
+        IsBlocking = false;
     }
 }

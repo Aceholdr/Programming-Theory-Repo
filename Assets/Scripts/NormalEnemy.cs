@@ -7,16 +7,11 @@ public class NormalEnemy : Enemy
     // Start is called before the first frame update
     void Start()
     {
-        speed = 7;
-        health = 300;
-        damage = 15;
-        healing = 10;
-        isBlocking = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        MaxHealth = 300;
+        Speed = 7;
+        Health = 300;
+        Damage = 25;
+        Healing = 10;
+        IsBlocking = false;
     }
 }
