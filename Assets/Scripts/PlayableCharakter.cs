@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayableCharakter : Character
+public class PlayableCharakter : Character  // INHERITANCE
 {
     [SerializeField] protected TextMeshProUGUI healthDisplay;
 
@@ -50,7 +50,7 @@ public class PlayableCharakter : Character
         LoadStats();
     }
 
-    protected virtual void LoadStats()
+    protected virtual void LoadStats()  // POLYMORPHISM
     {
 
     }

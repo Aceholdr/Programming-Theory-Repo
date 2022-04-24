@@ -19,6 +19,7 @@ public abstract class Character : MonoBehaviour, IComparable<Character>
 
     protected BattleField battleField;
 
+    // ENCAPSULATION
     public float MaxHealth { get { return maxHealth; } protected set { maxHealth = value; } }
     public float Speed { get { return speed; } protected set { speed = value; } }
     public float Health { get { return health; } protected set { health = value; } }
@@ -71,7 +72,7 @@ public abstract class Character : MonoBehaviour, IComparable<Character>
         IsBlocking = true;
     }
 
-    public abstract void MakeTurn(Character activeChar);
+    public abstract void MakeTurn(Character activeChar);  // ABSTRACTION
 
     // Sorts by speed
     public int CompareTo(Character character)
